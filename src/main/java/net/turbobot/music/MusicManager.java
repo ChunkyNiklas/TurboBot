@@ -13,12 +13,15 @@ package net.turbobot.music;
 */
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.event.TrackEndEvent;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -37,6 +40,7 @@ public class MusicManager {
 	public static MusicManager musicManager;
 	public final AudioPlayerManager playerManager;
 	public final Map<Long, GuildMusicManager> musicManagers;
+	public boolean loop = false;
 
 	private MusicManager() {
 		this.musicManagers = new HashMap<>();
@@ -161,11 +165,30 @@ public class MusicManager {
 		});
 	}
 
+
+	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+		if(endReason == endReason.FINISHED){
+			if(loop == true){
+				player.playTrack(track);
+			}
+		}
+
+		// endReason == FINISHED: A track finished or died by an exception (mayStartNext = true).
+		// endReason == LOAD_FAILED: Loading of a track failed (mayStartNext = true).
+		// endReason == STOPPED: The player was stopped.
+		// endReason == REPLACED: Another track started playing while this had not finished
+		// endReason == CLEANUP: Player hasn't been queried for a while, if you want you can put a
+		//                       clone of this back to your queue
+	}
+
+
 	public void play(Guild guild, GuildMusicManager musicManager, AudioTrack track, Member member) {
 		connectToFirstVoiceChannel(guild.getAudioManager(), member);
 
 		musicManager.scheduler.queue(track);
 	}
+
+
 
 	public void skipTrack(TextChannel channel, Member member) {
 		GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());

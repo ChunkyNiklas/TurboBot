@@ -41,6 +41,8 @@ public class onMessageReceived extends ListenerAdapter {
 				event.getGuild().getAudioManager().closeAudioConnection();
 				return;
 			}
+
+
 			if (args[0].isEmpty() || args[0].equalsIgnoreCase("help")) {
 				txt.sendMessage(EmbedCreator.sendHelp(member).build()).queue();
 			} else if (args[0].equalsIgnoreCase("Play")) {
@@ -69,7 +71,10 @@ public class onMessageReceived extends ListenerAdapter {
 				new disconnectCommand(event, member, guild, txt, args);
 			} else if (args[0].equalsIgnoreCase("Lycris")) {
 				new lycrisCommand(event, member, guild, txt, args);
+			} else if (args[0].equalsIgnoreCase("Loop")) {
+				new loopCommand(event, member, guild, txt, args);
 			}
+
 
 		}
 
