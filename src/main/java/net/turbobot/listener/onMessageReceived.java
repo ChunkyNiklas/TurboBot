@@ -73,6 +73,8 @@ public class onMessageReceived extends ListenerAdapter {
 				new lycrisCommand(event, member, guild, txt, args);
 			} else if (args[0].equalsIgnoreCase("Loop")) {
 				new loopCommand(event, member, guild, txt, args);
+			} else if (args[0].equalsIgnoreCase("Update")) {
+				new updateCommand(event, member, guild, txt, args);
 			}
 
 

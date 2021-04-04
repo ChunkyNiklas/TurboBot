@@ -47,7 +47,7 @@ public class guildsCommand {
 
 		EmbedBuilder embedBuilder = EmbedCreator.getNormal(member);
 		embedBuilder.setDescription(guildsString);
-		embedBuilder.setTitle("I am in following guilds.");
+		embedBuilder.setTitle("I am in following guilds. | " + Bot.jda.getGuilds().size());
 		txt.sendMessage(embedBuilder.build()).queue();
 
 
