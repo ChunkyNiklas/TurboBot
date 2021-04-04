@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.turbobot.main.Bot;
 import net.turbobot.utils.EmbedCreator;
+import net.turbobot.utils.checkGuild;
 
 /*
  Class: restartCommand
@@ -22,13 +23,19 @@ import net.turbobot.utils.EmbedCreator;
 */
 public class suggestedSongsCommand {
 	public suggestedSongsCommand(GuildMessageReceivedEvent event, Member member, Guild guild, TextChannel txt, String[] args) {
+		if(!checkGuild.checkPartner(guild.getIdLong()+"")){
+			txt.sendMessage(EmbedCreator.getError(member).setTitle("Hmm..").setDescription("This command is only for Partnered Servers!").build()).queue();
+			return;
+		}
+
+
 		Board board = Bot.board;
 
 		String songs = "";
 
 		for (Card card : board.fetchCards()) {
 			if (card.getIdList().equals("6062ea181e439e7222f09054")) {
-				songs = songs + "`" + card.getName() + "`\n";
+				songs = songs + "`" + card.getName() + "`\n\n";
 			}
 		}
 

@@ -13,6 +13,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.turbobot.main.Bot;
 import net.turbobot.main.Config;
 
+import java.awt.*;
+
 /*
  Class: EmbedCreator
  Date: 29.03.2021
@@ -61,10 +63,17 @@ public class EmbedCreator {
 
 	public static EmbedBuilder getNormal(Member member) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
+
+		if(checkGuild.checkPartner(member.getGuild().getIdLong()+"")){
+			embedBuilder.setColor(new Color(255, 191, 0));
+			embedBuilder.setFooter(Config.footerNormal +"|| This Guild is partnered with TurboBot");
+		}else{
+			embedBuilder.setColor(Config.colorNormal);
+			embedBuilder.setFooter(Config.footerNormal);
+		}
+
 		embedBuilder.setThumbnail("https://cdn.discordapp.com/attachments/824981302095642685/825389689200181279/PNG.png");
 		embedBuilder.setTitle("title");
-		embedBuilder.setFooter(Config.footerNormal);
-		embedBuilder.setColor(Config.colorNormal);
 		embedBuilder.setAuthor(member.getUser().getAsTag(), null, member.getUser().getEffectiveAvatarUrl());
 
 		return embedBuilder;
@@ -76,7 +85,11 @@ public class EmbedCreator {
 		embedBuilder.setTitle("An error occurred!");
 		embedBuilder.setColor(Config.colorError);
 		embedBuilder.setAuthor(member.getUser().getAsTag(), null, member.getUser().getEffectiveAvatarUrl());
-
+		if(checkGuild.checkPartner(member.getGuild().getIdLong()+"")){
+			embedBuilder.setColor(new Color(255, 191, 0));
+		}else{
+			embedBuilder.setColor(Config.colorError);
+		}
 		return embedBuilder;
 	}
 }

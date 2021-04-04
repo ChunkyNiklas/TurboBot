@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.turbobot.music.MusicManager;
 import net.turbobot.utils.EmbedCreator;
+import net.turbobot.utils.checkGuild;
 
 import java.util.List;
 
@@ -25,6 +26,17 @@ import java.util.List;
 */
 public class lycrisCommand {
 	public lycrisCommand(GuildMessageReceivedEvent event, Member member, Guild guild, TextChannel txt, String[] args) {
+		if(!checkGuild.checkPartner(guild.getIdLong()+"")){
+			txt.sendMessage(EmbedCreator.getError(member).setTitle("Hmm..").setDescription("This command is only for Partnered Servers!").build()).queue();
+			return;
+		}
+
+		if (MusicManager.getInstance().getGuildAudioPlayer(guild).player.getPlayingTrack() == null) {
+			txt.sendMessage(EmbedCreator.getError(member).setTitle("Hmm.").setDescription("Theres currently no song playing.").build()).queue();
+			return;
+		}
+
+
 		GLA gla = new GLA("mHhlkPSBD_jk-zn8_c3Ts71kQhwU4cWREPgkPcWynLqH0ubY_dim_FlITITFGPTV", "zBp8lbXkB_ILQTS2iP1VoOFfB7HHM3B58Ry1otogRwMAhKm4AeOiSbtrNXx_kzGO");
 		String search = MusicManager.getInstance().getGuildAudioPlayer(guild).player.getPlayingTrack().getInfo().title;
 
@@ -36,10 +48,7 @@ public class lycrisCommand {
 		String a = lycris.substring(0, len / 2), b = lycris.substring(len / 2);
 		embedBuilder.setDescription(a);
 		txt.sendMessage(embedBuilder.build()).queue();
-		if (MusicManager.getInstance().getGuildAudioPlayer(guild).player.getPlayingTrack() == null) {
-			txt.sendMessage(EmbedCreator.getError(member).setTitle("Hmm.").setDescription("Theres currently no song playing.").build()).queue();
-			return;
-		}
+
 
 
 	}

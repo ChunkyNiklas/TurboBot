@@ -27,11 +27,11 @@ public class checkGuild {
 				target = card;
 			}
 		}
-		if (target.getDesc().isEmpty()) {
+		if (!target.getDesc().isEmpty()) {
 			return target.getDesc();
 
 		} else {
-			return "NONE";
+			return "No reason is set.";
 
 		}
 
