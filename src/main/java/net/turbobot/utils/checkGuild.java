@@ -23,7 +23,7 @@ public class checkGuild {
 		Card target = null;
 		Board board = Bot.board;
 		for (Card card : board.fetchCards()) {
-			if (card.getName().equals(guildId) && card.getIdList().equals("6060fe075a463e5fbad0f359")) {
+			if (card.getName().equals(guildId+"") && card.getIdList().equals("6060fdfe2254ae6dec539c80")) {
 				target = card;
 			}
 		}

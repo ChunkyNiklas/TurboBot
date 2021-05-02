@@ -23,7 +23,10 @@ public class loopCommand {
 
 
 	public loopCommand(GuildMessageReceivedEvent event, Member member, Guild guild, TextChannel txt, String[] args) {
-		if(MusicManager.getInstance().loop == false){
+
+
+		txt.sendMessage("Well I am sorry, this feature is currently not working.").queue();
+		/*if(MusicManager.getInstance().loop == false){
 			if(MusicManager.getInstance().getGuildAudioPlayer(guild).player.getPlayingTrack() == null){
 				txt.sendMessage(EmbedCreator.getError(member).setTitle("Hmmm.").setDescription("Theres currently no track playing!").build()).queue();
 				return;
@@ -36,6 +39,7 @@ public class loopCommand {
 			MusicManager.getInstance().loop = false;
 			txt.sendMessage(EmbedCreator.getNormal(member).setTitle("Deactivated.").setDescription("The bot wont loop your song now.").build()).queue();
 		}
+		*/
 
 
 	}

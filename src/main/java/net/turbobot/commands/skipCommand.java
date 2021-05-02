@@ -27,6 +27,7 @@ public class skipCommand {
 		) {
 			txt.sendMessage(EmbedCreator.getError(member).setTitle("You need to be in the right VC.").setDescription("You aren't in the " +
 					"right VoiceChannel to add songs. #Troller").build()).queue();
+
 			return;
 		}
 

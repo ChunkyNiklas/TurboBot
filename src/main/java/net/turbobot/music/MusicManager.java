@@ -1,7 +1,7 @@
-/**
- * This code was created by Niklas (Chunky Niklas#0001).
- * Any unauthorized use of this code is a crime and will be prosecuted accordingly.
- * Copyright (c) 2021
+/*
+  This code was created by Niklas (Chunky Niklas#0001).
+  Any unauthorized use of this code is a crime and will be prosecuted accordingly.
+  Copyright (c) 2021
  */
 
 package net.turbobot.music;
@@ -13,15 +13,12 @@ package net.turbobot.music;
 */
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.event.TrackEndEvent;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -32,6 +29,7 @@ import net.turbobot.utils.EmbedCreator;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class MusicManager {
@@ -40,7 +38,6 @@ public class MusicManager {
 	public static MusicManager musicManager;
 	public final AudioPlayerManager playerManager;
 	public final Map<Long, GuildMusicManager> musicManagers;
-	public boolean loop = false;
 
 	private MusicManager() {
 		this.musicManagers = new HashMap<>();
@@ -64,16 +61,15 @@ public class MusicManager {
 		}
 		if (!audioManager.isConnected()) {
 			for (VoiceChannel voiceChannel : audioManager.getGuild().getVoiceChannels()) {
-				if (voiceChannel.getName().equalsIgnoreCase("Music")) {
+				if (voiceChannel.getName().toLowerCase().contains("music")) {
 					audioManager.openAudioConnection(voiceChannel);
 					return true;
-				} else if (voiceChannel.getName().equalsIgnoreCase("Musik")) {
+				} else if (voiceChannel.getName().toLowerCase().contains("musik")) {
 					audioManager.openAudioConnection(voiceChannel);
 					return true;
 				}
 			}
-
-			if (member.getVoiceState().getChannel() == null) {
+			if (Objects.requireNonNull(member.getVoiceState()).getChannel() == null) {
 				return false;
 			} else {
 				audioManager.openAudioConnection(member.getVoiceState().getChannel());
@@ -84,20 +80,6 @@ public class MusicManager {
 		}
 		return false;
 	}
-/*
-	@Override
-	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-		String[] command = event.getMessage().getContentRaw().split(" ", 2);
-
-		if ("~play".equals(command[0]) && command.length == 2) {
-			loadAndPlay(event.getChannel(), command[1]);
-		} else if ("~skip".equals(command[0])) {
-			skipTrack(event.getChannel());
-		}
-
-		super.onGuildMessageReceived(event);
-	}
-	*/
 
 	public synchronized GuildMusicManager getGuildAudioPlayer(Guild guild) {
 		long guildId = Long.parseLong(guild.getId());
@@ -115,6 +97,8 @@ public class MusicManager {
 
 	public void loadAndPlay(final TextChannel channel, final String trackUrl, Member member) {
 		GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
+
+
 		playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
 			@Override
 			public void trackLoaded(AudioTrack track) {
@@ -155,31 +139,16 @@ public class MusicManager {
 
 			@Override
 			public void noMatches() {
-				channel.sendMessage("Nothing found by " + trackUrl).queue();
+				channel.sendMessage("Nothing found by `" + trackUrl + "`").queue();
 			}
 
 			@Override
 			public void loadFailed(FriendlyException exception) {
-				channel.sendMessage("Could not play: " + exception.getMessage()).queue();
+				channel.sendMessage("Could not play, error: " + exception.getMessage()).queue();
 			}
 		});
 	}
 
-
-	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-		if(endReason == endReason.FINISHED){
-			if(loop == true){
-				player.playTrack(track);
-			}
-		}
-
-		// endReason == FINISHED: A track finished or died by an exception (mayStartNext = true).
-		// endReason == LOAD_FAILED: Loading of a track failed (mayStartNext = true).
-		// endReason == STOPPED: The player was stopped.
-		// endReason == REPLACED: Another track started playing while this had not finished
-		// endReason == CLEANUP: Player hasn't been queried for a while, if you want you can put a
-		//                       clone of this back to your queue
-	}
 
 
 	public void play(Guild guild, GuildMusicManager musicManager, AudioTrack track, Member member) {
@@ -187,7 +156,6 @@ public class MusicManager {
 
 		musicManager.scheduler.queue(track);
 	}
-
 
 
 	public void skipTrack(TextChannel channel, Member member) {

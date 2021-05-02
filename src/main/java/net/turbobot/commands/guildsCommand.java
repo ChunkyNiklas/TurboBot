@@ -23,15 +23,11 @@ import net.turbobot.utils.checkMember;
 */
 public class guildsCommand {
 	public guildsCommand(GuildMessageReceivedEvent event, Member member, Guild guild, TextChannel txt, String[] args) {
-
 		if (!checkMember.checkTeam(member)) {
 			txt.sendMessage(EmbedCreator.getError(member).setTitle("No permissions.").setDescription(Config.noPermissions).setColor(Config.colorModeration).build()).queue();
 			return;
 		}
-
 		String guildsString = "";
-
-
 		for (Guild guilds : Bot.jda.getGuilds()) {
 			String owner = "";
 			if (guilds.getOwner() == null) {
@@ -39,18 +35,12 @@ public class guildsCommand {
 			} else {
 				owner = guilds.getOwner().getUser().getAsTag();
 			}
-
 			guildsString =
 					guildsString + "Name: " + guilds.getName() + " - " + guilds.getIdLong() + " - " + owner + "\n";
 		}
-
-
 		EmbedBuilder embedBuilder = EmbedCreator.getNormal(member);
 		embedBuilder.setDescription(guildsString);
 		embedBuilder.setTitle("I am in following guilds. | " + Bot.jda.getGuilds().size());
 		txt.sendMessage(embedBuilder.build()).queue();
-
-
 	}
-
 }

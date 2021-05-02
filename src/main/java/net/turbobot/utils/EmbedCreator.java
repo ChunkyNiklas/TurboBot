@@ -24,10 +24,19 @@ public class EmbedCreator {
 
 	public static EmbedBuilder sendHelp(Member member) {
 		EmbedBuilder embedBuilder = new EmbedBuilder();
+		String extra = "";
+
+		if(checkGuild.checkPartner(member.getGuild().getIdLong()+"")){
+			embedBuilder.setColor(new Color(255, 191, 0));
+			embedBuilder.setFooter(Config.footerNormal +"|| This Guild is partnered with TurboBot");
+			extra = "This server is partnered with TurboBot!";
+		}else{
+			embedBuilder.setColor(Config.colorNormal);
+			embedBuilder.setFooter(Config.footerNormal);
+		}
+
 		embedBuilder.setThumbnail("https://cdn.discordapp.com/attachments/824981302095642685/825389689200181279/PNG.png");
 		embedBuilder.setTitle("Commands");
-		embedBuilder.setFooter(Config.footerNormal);
-		embedBuilder.setColor(Config.colorNormal);
 		embedBuilder.setAuthor(member.getUser().getAsTag(), null, member.getUser().getEffectiveAvatarUrl());
 
 		String playerCommands = "";
@@ -48,9 +57,11 @@ public class EmbedCreator {
 			}
 		}
 
+
+
 		if (checkMember.checkTeam(member)) {
 			embedBuilder.setDescription("Here you find commands. \n" + playerCommands + "\n\n**Your a Moderator. Here are available" +
-					" commands you can use. **" + moderatorCommands);
+					" commands you can use. **" + moderatorCommands + "\n\n" + extra);
 
 		} else {
 			embedBuilder.setDescription("Here you find a few commands. \n" + playerCommands);

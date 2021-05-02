@@ -31,6 +31,12 @@ public class onMessageReceived extends ListenerAdapter {
 		Member member = event.getMember();
 		Guild guild = event.getGuild();
 
+
+		System.out.println(event.getResponseNumber());
+		System.out.println(event.getGuild().getIdLong());
+		System.out.println(event.getMember().getIdLong());
+
+
 		if (event.getMessage().getContentDisplay().startsWith(Config.prefix)) {
 			String[] args = event.getMessage().getContentDisplay().substring(Config.prefixLength).split(" ");
 
@@ -75,6 +81,8 @@ public class onMessageReceived extends ListenerAdapter {
 				new loopCommand(event, member, guild, txt, args);
 			} else if (args[0].equalsIgnoreCase("Update")) {
 				new updateCommand(event, member, guild, txt, args);
+			} else if (args[0].equalsIgnoreCase("SoundCloud")) {
+				new soundCloudCommand(event, member, guild, txt, args);
 			}
 
 
